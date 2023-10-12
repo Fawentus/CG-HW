@@ -1,7 +1,9 @@
 set(SRCS
     main.cpp
-    TriangleWindow.cpp
-    TriangleWindow.h
+    FractalWindow.cpp
+    FractalWindow.h
+    FractalWidget.cpp
+    FractalWidget.h
 
     shaders.qrc
     Shaders/diffuse.fs
