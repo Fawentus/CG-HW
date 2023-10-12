@@ -31,6 +31,8 @@ protected:
 	void wheelEvent(QWheelEvent * e) override;
 
 private:
+	const float wheelSensitivity = 1.06;
+
 	GLint iterUniform_ = -1;
 	GLint bailOutUniform_ = -1;
 	GLint shiftUniform_ = -1;
