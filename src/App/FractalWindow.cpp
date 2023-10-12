@@ -137,10 +137,10 @@ void FractalWindow::mouseMoveEvent(QMouseEvent * e)
 		shift = QVector2D(-2 * diff.x() / width(), 2 * diff.y() / height()) * scale;
 	}
 
-	std::cout << "1: " << e->pos().x() << " " << e->pos().y() << "\n";
+	std::cout << "1: " << e->position().x() << " " << e->position().y() << "\n";
 	std::cout << "2: " << e->globalPos().x() << " " << e->globalPos().y() << "\n";
-	float x = 2. * e->pos().x() / width() - 1;
-	float y = -(2. * e->pos().y() / height() - 1);
+	float x = 2. * e->position().x() / width() - 1;
+	float y = -(2. * e->position().y() / height() - 1);
 	std::cout << "3: " << x << " " << y << '\n';
 	std::cout << "4: " << shiftGlobal.x() << " " << shiftGlobal.y() << '\n';
 }
@@ -153,27 +153,27 @@ void FractalWindow::wheelEvent(QWheelEvent * e)
 	} else {
 		scale /= 1.06;
 	}
-	float x = 2. * e->pos().x() / width() - 1;
-	float y = -(2. * e->pos().y() / height() - 1);
+	float x = 2. * e->position().x() / width() - 1;
+	float y = -(2. * e->position().y() / height() - 1);
 	shiftGlobal.setX(x - (x - shiftGlobal.x()) * scale / oldScale);
 	shiftGlobal.setY(y - (y - shiftGlobal.y()) * scale / oldScale);
 
-	// float x = 2. * e->pos().x() / width() - 1;
-	// float y = -(2. * e->pos().y() / height() - 1);
+	// float x = 2. * e->position().x() / width() - 1;
+	// float y = -(2. * e->position().y() / height() - 1);
 	// shiftGlobal.setX((x - (x - shiftGlobal.x()) * scale / oldScale));
 	// shiftGlobal.setY((y - (y - shiftGlobal.y()) * scale / oldScale));
 
-	// float x = 2. * e->pos().x() / width() - 1;
-	// float y = -(2. * e->pos().y() / height() - 1);
+	// float x = 2. * e->position().x() / width() - 1;
+	// float y = -(2. * e->position().y() / height() - 1);
 	// shiftGlobal += QVector2D(x, y) * (scale - oldScale);
 
-	// float x = e->pos().x();
-	// float y = -e->pos().y();
+	// float x = e->position().x();
+	// float y = -e->position().y();
 	// shiftGlobal.setX(-2*((x + shiftGlobal.x()) * scale / oldScale - x)/width());
 	// shiftGlobal.setY(2*((y + shiftGlobal.y()) * scale / oldScale - y)/height());
 
-	// float x = 2. * e->pos().x() / width() - 1;
-	// float y = -(2. * e->pos().y() / height() - 1);
+	// float x = 2. * e->position().x() / width() - 1;
+	// float y = -(2. * e->position().y() / height() - 1);
 	// shiftGlobal.setX((1-scale/oldScale)*scale*(x+shiftGlobal.x()));
 	// shiftGlobal.setY((1-scale/oldScale)*scale*(y+shiftGlobal.y()));
 	// TODO update shiftGlobal
