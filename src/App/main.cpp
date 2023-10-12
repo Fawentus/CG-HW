@@ -21,13 +21,13 @@ int main(int argc, char ** argv)
 	format.setVersion(g_gl_major_version, g_gl_minor_version);
 	format.setProfile(QSurfaceFormat::CoreProfile);
 	
-	FractalWindow* fractalWindow = new FractalWindow();
+	FractalWidget* fractalWidget = new FractalWidget(nullptr);
+
+	FractalWindow* fractalWindow = new FractalWindow(fractalWidget->FPSvalLabel);
 	fractalWindow->setFormat(format);
 	fractalWindow->setAnimated(true);
 
 	QVBoxLayout * layout = new QVBoxLayout(nullptr);
-
-	FractalWidget* fractalWidget = new FractalWidget(nullptr);
 
 	QWidget * container = QWidget::createWindowContainer(fractalWindow);
 	container->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);

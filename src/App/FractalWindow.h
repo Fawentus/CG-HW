@@ -8,6 +8,8 @@
 #include <QQuaternion>
 #include <QVector2D>
 #include <QVector3D>
+#include <QLabel>
+#include <QElapsedTimer>
 
 #include <memory>
 
@@ -15,7 +17,7 @@ class FractalWindow final : public fgl::GLWindow
 {
 
 public:
-	FractalWindow();
+	FractalWindow(QLabel * FPSvalLabel_) : FPSvalLabel(FPSvalLabel_) {};
 	void init() override;
 	void render() override;
 	void setIter(int iter_);
@@ -42,6 +44,8 @@ private:
 	QVector2D shiftGlobal{0., 0.};
 	float scale = 1;
 
+	QLabel * FPSvalLabel;
+
 	QOpenGLBuffer vbo_{QOpenGLBuffer::Type::VertexBuffer};
 	QOpenGLBuffer ibo_{QOpenGLBuffer::Type::IndexBuffer};
 	QOpenGLVertexArrayObject vao_;
@@ -49,6 +53,8 @@ private:
 	std::unique_ptr<QOpenGLShaderProgram> program_ = nullptr;
 
 	size_t frame_ = 0;
+	QElapsedTimer timer;
+	size_t currNumFrames = 0;
 
 	QVector2D mousePressPosition{0., 0.};
 	bool isMousePress = false;

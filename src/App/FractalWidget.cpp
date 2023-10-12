@@ -6,6 +6,7 @@ FractalWidget::FractalWidget(QWidget * parent) : QWidget(parent)
 {
 	QGridLayout * grid = new QGridLayout();
 
+
 	iterLabel = new QLabel("Number of iterations: ", this);
 	iterEdit = new QSlider(this);
 	
@@ -41,6 +42,13 @@ FractalWidget::FractalWidget(QWidget * parent) : QWidget(parent)
 	grid->addWidget(colorLabel, 2, 0);
 	grid->addWidget(colorEdit, 2, 1);
 	
-	
+
+	FPSLabel = new QLabel("FPS: ", this);
+	FPSvalLabel =  new QLabel(QString::number(0), this);
+
+	grid->addWidget(FPSLabel, 3, 0);
+	grid->addWidget(FPSvalLabel, 3, 1);
+
+
 	setLayout(grid);
 }

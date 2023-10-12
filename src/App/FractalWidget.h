@@ -10,6 +10,9 @@ class FractalWidget : public QWidget
 public:
 	FractalWidget(QWidget *parent = nullptr);
     
+    QLabel * FPSLabel;
+    QLabel * FPSvalLabel;
+
     QLabel * iterLabel;
 	QSlider * iterEdit;
 

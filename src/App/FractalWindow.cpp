@@ -21,15 +21,12 @@ constexpr std::array<GLuint, 6u> indices = {0, 1, 3, 1, 2, 3};
 
 }// namespace
 
-FractalWindow::FractalWindow() {}
-
 void FractalWindow::init()
 {
 	// Configure shaders
 	program_ = std::make_unique<QOpenGLShaderProgram>(this);
 	program_->addShaderFromSourceFile(QOpenGLShader::Vertex, ":/Shaders/diffuse.vs"); // это вершинный шейдер -- обрабатывает каждую вершину
-	program_->addShaderFromSourceFile(QOpenGLShader::Fragment,
-									  ":/Shaders/diffuse.fs"); // можно думать, что обрабатывает каждый пиксель
+	program_->addShaderFromSourceFile(QOpenGLShader::Fragment, ":/Shaders/diffuse.fs"); // можно думать, что обрабатывает каждый пиксель
 	program_->link();
 
 	// Create VAO object -- это объекты в видеопамяти
@@ -74,6 +71,8 @@ void FractalWindow::init()
 
 	// Clear all FBO buffers
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	timer.start();
 }
 
 void FractalWindow::render()
@@ -105,7 +104,15 @@ void FractalWindow::render()
 	program_->release();
 
 	// Increment frame counter
-	++frame_;
+    ++frame_;
+	++currNumFrames;
+	float currDTime = timer.elapsed() / 1000;
+    if (currDTime > 1)
+    {
+		FPSvalLabel->setText(QString::number(static_cast<int>(currNumFrames / currDTime)));
+        currNumFrames = 0;
+		timer.start();
+    }
 }
 
 void FractalWindow::mousePressEvent(QMouseEvent * e)
@@ -129,15 +136,46 @@ void FractalWindow::mouseMoveEvent(QMouseEvent * e)
 		const auto diff = QVector2D(e->localPos()) - mousePressPosition;
 		shift = QVector2D(-2 * diff.x() / width(), 2 * diff.y() / height()) * scale;
 	}
+
+	std::cout << "1: " << e->pos().x() << " " << e->pos().y() << "\n";
+	std::cout << "2: " << e->globalPos().x() << " " << e->globalPos().y() << "\n";
+	float x = 2. * e->pos().x() / width() - 1;
+	float y = -(2. * e->pos().y() / height() - 1);
+	std::cout << "3: " << x << " " << y << '\n';
+	std::cout << "4: " << shiftGlobal.x() << " " << shiftGlobal.y() << '\n';
 }
 
 void FractalWindow::wheelEvent(QWheelEvent * e)
 {
+	float oldScale = scale;
 	if (e->angleDelta().y() < 0) {
 		scale *= 1.06;
 	} else {
 		scale /= 1.06;
 	}
+	float x = 2. * e->pos().x() / width() - 1;
+	float y = -(2. * e->pos().y() / height() - 1);
+	shiftGlobal.setX(x - (x - shiftGlobal.x()) * scale / oldScale);
+	shiftGlobal.setY(y - (y - shiftGlobal.y()) * scale / oldScale);
+
+	// float x = 2. * e->pos().x() / width() - 1;
+	// float y = -(2. * e->pos().y() / height() - 1);
+	// shiftGlobal.setX((x - (x - shiftGlobal.x()) * scale / oldScale));
+	// shiftGlobal.setY((y - (y - shiftGlobal.y()) * scale / oldScale));
+
+	// float x = 2. * e->pos().x() / width() - 1;
+	// float y = -(2. * e->pos().y() / height() - 1);
+	// shiftGlobal += QVector2D(x, y) * (scale - oldScale);
+
+	// float x = e->pos().x();
+	// float y = -e->pos().y();
+	// shiftGlobal.setX(-2*((x + shiftGlobal.x()) * scale / oldScale - x)/width());
+	// shiftGlobal.setY(2*((y + shiftGlobal.y()) * scale / oldScale - y)/height());
+
+	// float x = 2. * e->pos().x() / width() - 1;
+	// float y = -(2. * e->pos().y() / height() - 1);
+	// shiftGlobal.setX((1-scale/oldScale)*scale*(x+shiftGlobal.x()));
+	// shiftGlobal.setY((1-scale/oldScale)*scale*(y+shiftGlobal.y()));
 	// TODO update shiftGlobal
 }
 
