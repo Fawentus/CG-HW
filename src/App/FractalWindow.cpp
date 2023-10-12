@@ -144,7 +144,7 @@ void FractalWindow::wheelEvent(QWheelEvent * e)
 	if (e->angleDelta().y() < 0) {
 		scale *= 1.06;
 	} else {
-		scale /= 1.06;
+		scale /= static_cast<float>(1.06);
 	}
 	float x = 2. * e->position().x() / width() - 1;
 	float y = -(2. * e->position().y() / height() - 1);
