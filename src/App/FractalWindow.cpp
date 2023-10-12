@@ -136,13 +136,6 @@ void FractalWindow::mouseMoveEvent(QMouseEvent * e)
 		const auto diff = QVector2D(e->localPos()) - mousePressPosition;
 		shift = QVector2D(-2 * diff.x() / width(), 2 * diff.y() / height()) * scale;
 	}
-
-	std::cout << "1: " << e->position().x() << " " << e->position().y() << "\n";
-	std::cout << "2: " << e->globalPos().x() << " " << e->globalPos().y() << "\n";
-	float x = 2. * e->position().x() / width() - 1;
-	float y = -(2. * e->position().y() / height() - 1);
-	std::cout << "3: " << x << " " << y << '\n';
-	std::cout << "4: " << shiftGlobal.x() << " " << shiftGlobal.y() << '\n';
 }
 
 void FractalWindow::wheelEvent(QWheelEvent * e)
