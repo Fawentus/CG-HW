@@ -8,9 +8,19 @@
 #include <QOpenGLShaderProgram>
 #include <QOpenGLTexture>
 #include <QOpenGLVertexArrayObject>
+#include <QSlider>
 
 #include <functional>
 #include <memory>
+#include <tinygltf/tiny_gltf.h>
+
+struct ParamGlDraw {
+	int mode;
+	size_t count;
+	int componentType;
+    size_t byteOffset;
+	bool is_ibo = false;
+};
 
 class Window final : public fgl::GLWidget
 {
@@ -23,6 +33,8 @@ public: // fgl::GLWidget
 	void onInit() override;
 	void onRender() override;
 	void onResize(size_t width, size_t height) override;
+	void keyReleaseEvent(QKeyEvent *event) override;
+	void wheelEvent(QWheelEvent *event) override;
 
 private:
 	class PerfomanceMetricsGuard final
@@ -48,17 +60,32 @@ signals:
 	void updateUI();
 
 private:
-	GLint mvpUniform_ = -1;
-
-	QOpenGLBuffer vbo_{QOpenGLBuffer::Type::VertexBuffer};
-	QOpenGLBuffer ibo_{QOpenGLBuffer::Type::IndexBuffer};
-	QOpenGLVertexArrayObject vao_;
+	double speed = 5;
+   	QVector3D currPosition{2., 0., 0.};
+	
+	GLint modelUniform_ = -1;
+	GLint viewUniform_ = -1;
+	GLint projectionUniform_ = -1;
+	GLint lightPosUniform_ = -1;
+	GLint viewPosUniform_ = -1;
+	GLint lightColorUniform_ = -1;
+	GLint morphingUniform_ = -1;
+	GLint ambientStrengthUniform_ = -1;
+	GLint specularStrengthUniform_ = -1;
+	
+	QVector3D morphing_{1., 0., 0.}; 
+	QSlider morphingEdit = QSlider(Qt::Horizontal);
+	float ambientStrength_ = 0.5;
+	QSlider ambientStrengthEdit = QSlider(Qt::Horizontal);
+	float specularStrength_ = 0.5;
+	QSlider specularStrengthEdit = QSlider(Qt::Horizontal);
+	QVector3D lightColor_{1., 0., 0.};
+	QSlider lightColorEdit = QSlider(Qt::Horizontal);
 
 	QMatrix4x4 model_;
 	QMatrix4x4 view_;
 	QMatrix4x4 projection_;
 
-	std::unique_ptr<QOpenGLTexture> texture_;
 	std::unique_ptr<QOpenGLShaderProgram> program_;
 
 	QElapsedTimer timer_;
@@ -69,4 +96,21 @@ private:
 	} ui_;
 
 	bool animated_ = true;
+
+	tinygltf::Model model;
+
+	std::vector<std::unique_ptr<QOpenGLVertexArrayObject>> vaos;
+	std::vector<std::unique_ptr<QOpenGLTexture>> texture;
+	std::vector<ParamGlDraw> paramsGlDraw;
+
+	std::vector<QOpenGLBuffer> vbos;
+    std::vector<QOpenGLBuffer> ibos;
+
+	std::map<int, GLuint> id_vbo;
+	std::map<int, GLuint> id_ibo;
+
+	// https://github.com/syoyo/tinygltf/blob/release/examples/basic/main.cpp
+    bool loadModel(const char *filename);
+	void bindMesh(tinygltf::Mesh &mesh);
+	void bindModelNodes(tinygltf::Node &node);
 };
